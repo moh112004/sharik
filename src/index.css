@@ -164,12 +164,42 @@ a {
 
 .section-hero {
   min-height: 100vh;
-  display: flex;
-  align-items: center;
-  background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 60%), url('https://source.unsplash.com/random/1920x1080/?creative,agency,modern');
+  /* display: flex; */
+  /* align-items: center; */
+  /* position: relative; */
+  /* overflow: hidden; */
+}
+
+.hero-slideshow {
+  position: absolute;
+  top: 88px;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.hero-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+@media (max-width: 768px) {
+  .hero-slide {
+    background-attachment: scroll; /* Better performance on mobile */
+  }
+}
+
+.hero-slide.active {
+  opacity: 1;
 }
 
 .container {
@@ -180,12 +210,9 @@ a {
 
 .hero-content {
   text-align: center;
-  padding: 0 16px;
-  background: rgba(255, 255, 255, 0.8);
-  border-radius: 16px;
-  padding: 40px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(10px);
+   position: relative; 
+  /* top:200px; */
+  z-index: 2;
 }
 
 .logo-badge {
@@ -201,6 +228,7 @@ a {
   font-weight: 900;
   font-size: 1.25rem;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  margin-top: 40px; /* Lower the badge */
 }
 
 .hero-title {
@@ -208,6 +236,7 @@ a {
   line-height: 1.02;
   margin: 0 0 24px;
   letter-spacing: -0.05em;
+  color:var(--primary);
 }
 
 .hero-text {
@@ -390,19 +419,20 @@ a {
 }
 
 .social-links a {
-  width: 48px;
-  height: 48px;
+  /* width: 48px;
+  height: 48px; */
   border-radius: 999px;
-  background: #111111;
+  /* background: #111111; */
   color: #ffffff;
   display: grid;
   place-items: center;
   text-decoration: none;
-  transition: background-color 0.25s ease;
+  transition:  0.25s ease;
 }
 
 .social-links a:hover {
-  background: #333333;
+  scale: 1.1;
+  transition:  0.25s ease;
 }
 
 .contact-panel h3,
