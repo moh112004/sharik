@@ -1,4 +1,14 @@
 import { useState, useEffect, useRef } from "react";
+import mneLogo from './assets/logos/MNE.jpg';
+import smrcLogo from './assets/logos/smrc.jpeg';
+import unicefLogo from './assets/logos/unicef.png';
+import modaLogo from './assets/logos/moda.PNG';
+import saifLogo from './assets/logos/saif_aldawla.jpg';
+import kingSalmanLogo from './assets/logos/king_salman.jpeg';
+import primeLogo from './assets/logos/prime_disel.PNG';
+import oneSudanLogo from './assets/logos/one_sudan.jpg';
+import sharikLogo from './assets/logos/sharik.png';
+import khalidDagashLogo from './assets/logos/khalid_dagash.jpeg';
 
 function App() {
   const [isArabic, setIsArabic] = useState(false);
@@ -7,12 +17,25 @@ function App() {
   const navRef = useRef(null);
 
   const images = [
-    // "https://images.unsplash.com/photo-1552664730-d307ca884978?w=1920&h=1080&fit=crop&crop=center",
     "https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=1920&h=1080&fit=crop&crop=center",
     "https://images.unsplash.com/photo-1551434678-e076c223a692?w=1920&h=1080&fit=crop&crop=center",
     "https://images.unsplash.com/photo-1552664688-cf412ec27db2?w=1920&h=1080&fit=crop&crop=center",
     "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1920&h=1080&fit=crop&crop=center"
   ];
+
+  const partnerLogos = [
+    mneLogo,
+    smrcLogo,
+    unicefLogo,
+    modaLogo,
+    saifLogo,
+    kingSalmanLogo,
+    primeLogo,
+    oneSudanLogo,
+    khalidDagashLogo,
+  ];
+
+  const marqueeLogos = [...partnerLogos, ...partnerLogos];
 
   const toggleLanguage = () => {
     setIsArabic(!isArabic);
@@ -110,8 +133,8 @@ function App() {
           "Saif Al-Dawla Food Industries",
           "King Salman Humanitarian Aid Centre",
           "Prime Diesel",
-          "Econect",
           "One Sudan",
+          "Khalid Dagash",
         ],
       },
       work: {
@@ -264,7 +287,6 @@ function App() {
           "صناعات سيف الدولة الغذائية",
           "مركز الملك سلمان للإغاثة",
           "برايم ديزل",
-          "إيكونيكت",
           "وان سودان",
         ],
       },
@@ -357,7 +379,7 @@ function App() {
   return (
     <div className={`app ${isArabic ? "rtl" : "ltr"}`}>
       <nav className="navbar" ref={navRef}>
-        <div className="nav-logo">Sharik Creatives</div>
+        <img src={sharikLogo} alt="Sharik Logo" className="nav-logo-img" />
         <div className="nav-right">
           <button
             className="hamburger"
@@ -482,11 +504,17 @@ function App() {
             {currentContent.partners.title}
           </h2>
           <div className="partner-grid">
-            {currentContent.partners.list.map((partner, index) => (
-              <article key={index} className="partner-card">
-                {partner}
-              </article>
-            ))}
+            <div className="partner-track">
+              {marqueeLogos.map((logo, index) => (
+                <div key={index} className="partner-slide">
+                  <img
+                    src={logo}
+                    alt={currentContent.partners.list[index % partnerLogos.length]}
+                    className="partner-logo"
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>

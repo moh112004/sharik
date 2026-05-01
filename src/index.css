@@ -1,10 +1,16 @@
 :root {
   color-scheme: light;
-  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
   background: #ffffff;
   color: #111111;
-  --primary: #FF6348;
-  --secondary: #E5E6FA;
+  --primary: #ff6348;
+  --secondary: #e5e6fa;
   --accent: var(--primary);
   --accent-bg: var(--secondary);
   --accent-border: var(--primary);
@@ -60,6 +66,11 @@ a {
   border-radius: 8px;
 }
 
+.nav-logo-img {
+  height: 50px;
+  width: auto;
+}
+
 .nav-right {
   display: flex;
   align-items: center;
@@ -68,6 +79,7 @@ a {
 
 .nav-links {
   display: flex;
+  align-items: center;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -210,7 +222,7 @@ a {
 
 .hero-content {
   text-align: center;
-   position: relative; 
+  position: relative;
   /* top:200px; */
   z-index: 2;
 }
@@ -236,7 +248,7 @@ a {
   line-height: 1.02;
   margin: 0 0 24px;
   letter-spacing: -0.05em;
-  color:var(--primary);
+  color: var(--primary);
 }
 
 .hero-text {
@@ -281,7 +293,6 @@ a {
 
 .feature-grid,
 .service-grid,
-.partner-grid,
 .project-list,
 .process-grid,
 .contact-grid,
@@ -299,7 +310,28 @@ a {
 }
 
 .partner-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  overflow: hidden;
+  padding: 16px 0;
+}
+
+.partner-track {
+  display: inline-flex;
+  align-items: center;
+  gap: 24px;
+  width: max-content;
+  animation: scroll-logos 15s linear infinite;
+}
+
+.partner-slide {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 180px;
+}
+
+.partner-track:hover {
+  animation-play-state: paused;
 }
 
 .process-grid {
@@ -326,7 +358,9 @@ a {
   border-radius: 24px;
   padding: 32px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .feature-card:hover,
@@ -390,6 +424,30 @@ a {
   color: #111111;
 }
 
+.partner-logo {
+  max-width: 100%;
+  max-height: 80px;
+  object-fit: contain;
+}
+
+@keyframes scroll-logos {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes scroll-logos-rtl {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(50%);
+  }
+}
+
 .project-card p,
 .contact-panel p,
 .vision-card p {
@@ -427,12 +485,12 @@ a {
   display: grid;
   place-items: center;
   text-decoration: none;
-  transition:  0.25s ease;
+  transition: 0.25s ease;
 }
 
 .social-links a:hover {
   scale: 1.1;
-  transition:  0.25s ease;
+  transition: 0.25s ease;
 }
 
 .contact-panel h3,
@@ -460,7 +518,7 @@ a {
   }
 
   .partner-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    display: block;
   }
 
   .process-grid {
@@ -498,7 +556,7 @@ a {
 }
 
 .lang-toggle i {
-  font-size: 16px;
+  font-size: 20px;
 }
 
 .lang-toggle span {
@@ -521,7 +579,7 @@ a {
 .app.rtl .vision-card p,
 .app.rtl .contact-panel h3,
 .app.rtl .contact-panel p {
-  text-align: right;
+  text-align: center;
 }
 
 .app.rtl .service-card ul,
@@ -547,3 +605,6 @@ a {
   left: 20px;
 }
 
+.app.rtl .partner-track {
+  animation: scroll-logos-rtl 15s linear infinite;
+}
