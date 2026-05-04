@@ -1,36 +1,62 @@
 import { useState, useEffect, useRef } from "react";
-import mneLogo from './assets/logos/MNE.jpg';
-import smrcLogo from './assets/logos/smrc.jpeg';
-import unicefLogo from './assets/logos/unicef.png';
-import modaLogo from './assets/logos/moda.PNG';
-import saifLogo from './assets/logos/saif_aldawla.jpg';
-import kingSalmanLogo from './assets/logos/king_salman.jpeg';
-import primeLogo from './assets/logos/prime_disel.PNG';
-import oneSudanLogo from './assets/logos/one_sudan.png';
-import alnileBankLogo from './assets/logos/alnilebank.jfif';
-import fadcncLogo from './assets/logos/fadcnc.png';
-import sadaqaatLogo from './assets/logos/sadagaat.png';
-import tawseelLogo from './assets/logos/tawseel.png';
-import sharikLogo from './assets/logos/sharik.png';
-import sharik2Logo from './assets/logos/sharik2.jpeg';
-import khalidDagashLogo from './assets/logos/khalid_dagash.jpeg';
+import mneLogo from "./assets/logos/MNE.jpg";
+import smrcLogo from "./assets/logos/smrc.jpeg";
+import unicefLogo from "./assets/logos/unicef.png";
+import modaLogo from "./assets/logos/moda.PNG";
+import saifLogo from "./assets/logos/saif_aldawla.jpg";
+import kingSalmanLogo from "./assets/logos/king_salman.jpeg";
+import primeLogo from "./assets/logos/prime_disel.PNG";
+import oneSudanLogo from "./assets/logos/one_sudan.png";
+import alnileBankLogo from "./assets/logos/alnilebank.jfif";
+import fadcncLogo from "./assets/logos/fadcnc.png";
+import sadaqaatLogo from "./assets/logos/sadagaat.png";
+import tawseelLogo from "./assets/logos/tawseel.png";
+import sharikLogo from "./assets/logos/sharik.png";
+import sharik2Logo from "./assets/logos/sharik2.jpeg";
+import khalidDagashLogo from "./assets/logos/khalid_dagash.jpeg";
+
+function VideoViewer(props) {
+    return (
+      <div className="video-example">
+        <div className="video-wrapper">
+          <iframe
+            src={props.src}
+            title={props.title}
+            frameBorder="0"
+            allow="autoplay; encrypted-media"
+            allowFullScreen></iframe>
+        </div>
+        <h3>{props.title}</h3>
+      </div>
+    );
+  }
+
 
 function App() {
   const [isArabic, setIsArabic] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return localStorage.getItem('language') === 'ar';
+    if (typeof window === "undefined") return false;
+    return localStorage.getItem("language") === "ar";
   });
   const [menuOpen, setMenuOpen] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [activeTab, setActiveTab] = useState('governmental');
-  const [activeSection, setActiveSection] = useState('about');
+  const [activeTab, setActiveTab] = useState("governmental");
+  const [activeSection, setActiveSection] = useState("about");
+  const [expandedProjects, setExpandedProjects] = useState({});
+  const [selectedVideo, setSelectedVideo] = useState(null);
   const navRef = useRef(null);
+
+
+  
+
+  const toggleProjectExpand = (index) => {
+    setExpandedProjects((prev) => ({ ...prev, [index]: !prev[index] }));
+  };
 
   const images = [
     "https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=1920&h=1080&fit=crop&crop=center",
     "https://images.unsplash.com/photo-1551434678-e076c223a692?w=1920&h=1080&fit=crop&crop=center",
     "https://images.unsplash.com/photo-1552664688-cf412ec27db2?w=1920&h=1080&fit=crop&crop=center",
-    "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1920&h=1080&fit=crop&crop=center"
+    "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1920&h=1080&fit=crop&crop=center",
   ];
 
   const partnerLogos = [
@@ -56,7 +82,7 @@ function App() {
   };
 
   useEffect(() => {
-    localStorage.setItem('language', isArabic ? 'ar' : 'en');
+    localStorage.setItem("language", isArabic ? "ar" : "en");
   }, [isArabic]);
 
   const toggleMenu = () => {
@@ -92,15 +118,15 @@ function App() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add('in-view');
+            entry.target.classList.add("in-view");
             observer.unobserve(entry.target);
           }
         });
       },
-      { threshold: 0.18 }
+      { threshold: 0.18 },
     );
 
-    document.querySelectorAll('.animate-on-scroll').forEach((element) => {
+    document.querySelectorAll(".animate-on-scroll").forEach((element) => {
       observer.observe(element);
     });
 
@@ -108,16 +134,16 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const sections = document.querySelectorAll('section[id], footer#footer');
+    const sections = document.querySelectorAll("section[id], footer#footer");
     const sectionObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            setActiveSection(entry.target.id || 'footer');
+            setActiveSection(entry.target.id || "footer");
           }
         });
       },
-      { threshold: 0.35 }
+      { threshold: 0.35 },
     );
 
     sections.forEach((section) => sectionObserver.observe(section));
@@ -206,6 +232,9 @@ function App() {
             desc: "Sharik Creatives ran and executed a full campaign for the ministry of education, starting from launching the ministry’s social media platforms to producing all digital products, videos, statics, and news.",
             meta: ["Campaign Films", "Graphic Assets", "Launch Strategy"],
             category: "governmental",
+            videos: [
+    { src: "https://drive.google.com/file/d/1ZXedinBb2pItP7p57198wheuF8iwRT5n/preview", title: "فيديو 1" },
+  ]
           },
           {
             title:
@@ -396,88 +425,131 @@ function App() {
         title: "نظرة على أعمالنا",
         tabs: ["حكومية", "إنسانية", "شركات خاصة"],
         projects: [
-          {
-            title: "وزارة التعليم الوطني - حملة مدرستي أولان - 2026",
-            desc: "قامت شارك كريتفز بتشغيل وتنفيذ حملة كاملة لوزارة التعليم، بدءاً من إطلاق منصات التواصل الاجتماعي للوزارة وإنتاج جميع المنتجات الرقمية والفيديوهات والصور الثابتة والأخبار.",
-            meta: ["أفلام الحملة", "الأصول الجرافيكية", "استراتيجية الإطلاق"],
-            category: "governmental",
-          },
-          {
-            title:
-              "الشركة السودانية للموارد المعدنية - فيلم وثائقي - المسؤولية الاجتماعية للشركات 2024",
-            desc: "فيلم وثائقي شامل يبرز مبادرات المسؤولية الاجتماعية عبر القطاعات الشرقية والشمالية والوسطى، تم تسليمه كإنتاج شامل من البداية إلى النهاية بما في ذلك التصوير والتحرير والإخراج.",
-            meta: ["الفيلم الوثائقي"],
-            category: "governmental",
-          },
-          {
-            title: "اليونسيف - مشروع التعلم الإلكتروني",
-            desc: "تغطية إعلامية شاملة لزيارة المدير الإقليمي لمركز التعلم الإلكتروني في الإسكان، بورتسودان، مع تسليط الضوء على المبادرات التعليمية من خلال التصوير والتحرير والإنتاج المهني الكامل.",
-            meta: ["الفيديو التعليمي"],
-            category: "humanitarian",
-          },
-          {
-            title:
-              "مركز الملك سلمان للإغاثة والمساعدات الإنسانية - مشروع دعم الأمن الغذائي 2024",
-            desc: "إنتاج فيديو إطلاق رسمي لمشروع دعم الأمن الغذائي في السودان، مع تسليط الضوء على أهداف المشروع وتأثيره من خلال التصوير والتحرير المهني.",
-            meta: ["فيديو الإطلاق"],
-            category: "humanitarian",
-          },
-          {
-            title: "مصنع مودا للصلب - الهوية التجارية والحضور الرقمي",
-            desc: "بناء حضور رقمي قوي ومتسق للعلامة التجارية من خلال حملة علامة تجارية استراتيجية وإعلان علامة تجارية مدفوع بصرياً يعكس هوية العلامة وقيمها.",
-            meta: ["فيديو العلامة التجارية", "الهوية البصرية"],
-            category: "private",
-          },
-          {
-            title:
-              "صناعات سيف الدولة الغذائية - إدارة وسائل التواصل الاجتماعي وحملات الإعلان",
-            desc: "إدارة شاملة لمنصات وسائل التواصل الاجتماعي وتنفيذ حملات إعلانية مستهدفة لتعزيز الوعي بالعلامة التجارية وجذب الجمهور بشكل فعال.",
-            meta: ["محتوى الحملة"],
-            category: "private",
-          },
-          {
-            title: "برايم ديزل - مقابلات شركات",
-            desc: "إنتاج سلسلة من المقابلات المهنية مع مديري الشركة، مع عرض أدوارهم ومسؤولياتهم ومساهماتهم في المنظمة من خلال التصوير والتحرير عالي الجودة.",
-            meta: ["سلسلة المقابلات"],
-            category: "private",
-          },
-          {
-            title: "وان سودان - إعلان رسمي للشركة",
-            desc: "تنفيذ إعلان رسمي مصقول لوان سودان، مصمم لتقوية الرسالة المؤسسية من خلال مرئيات عالية الجودة وسرد مؤثر.",
-            meta: ["إعلان العلامة التجارية"],
-            category: "private",
-          },
-          {
-            title: "صدقات - حملة الدعم الإنساني",
-            desc: "حملة إعلامية إنسانية تبرز أعمال صدقات الإغاثية وتدعم التواصل مع الجمهور بمحتوى مؤثر.",
-            meta: ["حملة توعية", "سرد القصص"],
-            category: "humanitarian",
-          },
-          {
-            title: "FAD CNC - حملة العلامة التجارية الصناعية",
-            desc: "هوية بصرية حديثة وحملة ترويجية لفاد سي ان سي مصممة لجمهور القطاع الصناعي.",
-            meta: ["العلامة التجارية المؤسسية", "رسائل صناعية"],
-            category: "private",
-          },
-          {
-            title: "توصيل - حضور العلامة التجارية في اللوجستيات",
-            desc: "تصميم علامة تجارية رقمية استراتيجية لتوصيل لتعزيز موقعها في سوق الخدمات اللوجستية والتوصيل.",
-            meta: ["علامة لوجستية", "الحضور الرقمي"],
-            category: "private",
-          },
-          {
-            title: "بنك النيل - حملة خدمات مالية",
-            desc: "حملة متميزة لبنك النيل تركز على الخدمات المصرفية الرقمية والثقة والتفاعل مع العملاء.",
-            meta: ["حملة مالية", "بناء الثقة"],
-            category: "private",
-          },
-          {
-            title: "شركة خالد دقاش الطبية - الهوية التجارية والحضور الرقمي",
-            desc: "تطوير هوية تجارية شاملة وحضور رقمي للشركة الطبية، بما في ذلك حملات العلامات التجارية الاستراتيجية والإعلانات المقنعة بصرياً التي تعكس التزام الشركة بالتميز في الرعاية الصحية.",
-            meta: ["فيديو العلامة التجارية", "الهوية البصرية"],
-            category: "private",
-          },
-        ],
+  {
+    title: "وزارة التعليم الوطني - حملة مدرستي أولان - 2026",
+    desc: "قامت شارك كريتفز بتشغيل وتنفيذ حملة كاملة لوزارة التعليم، بدءاً من إطلاق منصات التواصل الاجتماعي للوزارة وإنتاج جميع المنتجات الرقمية والفيديوهات والصور الثابتة والأخبار.",
+    meta: ["أفلام الحملة", "الأصول الجرافيكية", "استراتيجية الإطلاق"],
+    category: "governmental",
+    videos: []
+  },
+  {
+    title: "الشركة السودانية للموارد المعدنية - فيلم وثائقي - المسؤولية الاجتماعية للشركات 2024",
+    desc: "فيلم وثائقي شامل يبرز مبادرات المسؤولية الاجتماعية عبر القطاعات الشرقية والشمالية والوسطى، تم تسليمه كإنتاج شامل من البداية إلى النهاية بما في ذلك التصوير والتحرير والإخراج.",
+    meta: ["الفيلم الوثائقي"],
+    category: "governmental",
+    videos: [
+      { src: "https://drive.google.com/file/d/1aoDU9kkf2n7_B0aht_rxzJX5kPxiq6xe/preview", title: "فيلم المسؤولية المجتمعية" }
+    ]
+  },
+  {
+    title: "اليونسيف - مشروع التعلم الإلكتروني",
+    desc: "تغطية إعلامية شاملة لزيارة المدير الإقليمي لمركز التعلم الإلكتروني في الإسكان، بورتسودان، مع تسليط الضوء على المبادرات التعليمية من خلال التصوير والتحرير والإنتاج المهني الكامل.",
+    meta: ["الفيديو التعليمي"],
+    category: "humanitarian",
+    videos: [
+      { src: "https://drive.google.com/file/d/1ZXedinBb2pItP7p57198wheuF8iwRT5n/preview", title: "مشروع التعليم الالكتروني" }
+    ]
+  },
+  {
+    title: "مركز الملك سلمان للإغاثة والمساعدات الإنسانية - مشروع دعم الأمن الغذائي 2024",
+    desc: "إنتاج فيديو إطلاق رسمي لمشروع دعم الأمن الغذائي في السودان، مع تسليط الضوء على أهداف المشروع وتأثيره من خلال التصوير والتحرير المهني.",
+    meta: ["فيديو الإطلاق"],
+    category: "humanitarian",
+    videos: []
+  },
+  {
+    title: "مصنع مودا للصلب - الهوية التجارية والحضور الرقمي",
+    desc: "بناء حضور رقمي قوي ومتسق للعلامة التجارية من خلال حملة علامة تجارية استراتيجية وإعلان علامة تجارية مدفوع بصرياً يعكس هوية العلامة وقيمها.",
+    meta: ["فيديو العلامة التجارية", "الهوية البصرية"],
+    category: "private",
+    videos: [
+      { src: "https://drive.google.com/file/d/1ylNJ85jJNdjBZ9Uo_uOmkicAU1JW_1md/preview", title: "اغنية مودا معانا" },
+      { src: "https://drive.google.com/file/d/1BOj8OX5UQcd1479io9LVGXPl_XO-01PD/preview", title: "مودا - اعلان" },
+    
+  { src: "https://drive.google.com/file/d/1vWjMdjr0lNPSdxUrig1huw5eA08RCQxD/preview", title: "حملة تحدي الثبات 1" },
+  { src: "https://drive.google.com/file/d/105NxVUQgEyvumyC5a6911TvBbMDqNgc1/preview", title: "حملة تحدي الثبات 2" },
+  { src: "https://drive.google.com/file/d/1NVS21Tvhyedne97hFYZf-fCBVr7mSsbE/preview", title: "حملة تحدي الثبات 3" },
+  { src: "https://drive.google.com/file/d/1ZvufFu-rUFMVopAGfgjmMfNWOzIf7IWW/preview", title: "حملة تحدي الثبات 4" },
+  { src: "https://drive.google.com/file/d/1WSvdchKyKIJGsvKPeKCKt6-Aa57dQkOI/preview", title: "حملة تحدي الثبات 5" },
+  { src: "https://drive.google.com/file/d/1J-Aa81-RysDkD37v_unW0KcQoDQZRn4t/preview", title: "حملة تحدي الثبات 6" },
+  { src: "https://drive.google.com/file/d/1N-PCLUluKw6sU2nvJpLmTgDFv11PPxQW/preview", title: "حملة تحدي الثبات 7" },
+  { src: "https://drive.google.com/file/d/1cCgzQkTpniUhOxc_0615ETT065NNp9nH/preview", title: "حملة تحدي الثبات 8" }
+]
+  },
+  {
+    title: "صناعات سيف الدولة الغذائية - إدارة وسائل التواصل الاجتماعي وحملات الإعلان",
+    desc: "إدارة شاملة لمنصات وسائل التواصل الاجتماعي وتنفيذ حملات إعلانية مستهدفة لتعزيز الوعي بالعلامة التجارية وجذب الجمهور بشكل فعال.",
+    meta: ["محتوى الحملة"],
+    category: "private",
+    videos: []
+  },
+  {
+    title: "برايم ديزل - مقابلات شركات",
+    desc: "إنتاج سلسلة من المقابلات المهنية مع مديري الشركة، مع عرض أدوارهم ومسؤولياتهم ومساهماتهم في المنظمة من خلال التصوير والتحرير عالي الجودة.",
+    meta: ["سلسلة المقابلات"],
+    category: "private",
+    videos: []
+  },
+  {
+    title: "وان سودان - إعلان رسمي للشركة",
+    desc: "تنفيذ إعلان رسمي مصقول لوان سودان، مصمم لتقوية الرسالة المؤسسية من خلال مرئيات عالية الجودة وسرد مؤثر.",
+    meta: ["إعلان العلامة التجارية"],
+    category: "private",
+    videos: [
+      { src: "https://drive.google.com/file/d/1tHO6W1g38GN-vaVGFfRliJ8iE2Mpjda6/preview", title: "وان سودان" }
+    ]
+  },
+  {
+    title: "صدقات - حملة الدعم الإنساني",
+    desc: "حملة إعلامية إنسانية تبرز أعمال صدقات الإغاثية وتدعم التواصل مع الجمهور بمحتوى مؤثر.",
+    meta: ["حملة توعية", "سرد القصص"],
+    category: "humanitarian",
+    videos: [
+      { src: "https://drive.google.com/file/d/1BZ0fWC1jmuJfiU3m0kI2K4FtpUXagU0I/preview", title: "صدقات - يلا نتعلم" }
+    ]
+  },
+  {
+    title: "FAD CNC - حملة العلامة التجارية الصناعية",
+    desc: "هوية بصرية حديثة وحملة ترويجية لفاد سي ان سي مصممة لجمهور القطاع الصناعي.",
+    meta: ["العلامة التجارية المؤسسية", "رسائل صناعية"],
+    category: "private",
+    videos: [
+{ src: "https://drive.google.com/file/d/1jnXcAkNek5FYQFLiJr8t3-cipBP94C-F/preview", title: "FAD CNC 1" },
+  { src: "https://drive.google.com/file/d/1G0uLRPLCdEZj6waUzlC40w-NtqVQtB54/preview", title: "FAD CNC 2" },
+  { src: "https://drive.google.com/file/d/1Z-US6U7Y5hRa9wEyE9s_ue1KZq87rWsm/preview", title: "FAD CNC 3" },
+  { src: "https://drive.google.com/file/d/1q_z5DBnf7ps2AB5NPY89lkYI0vEbtOHC/preview", title: "FAD CNC 4" },
+  { src: "https://drive.google.com/file/d/12wJH7T8jNrYHL00Wh9FXRb9r4m5nX7zD/preview", title: "FAD CNC 5" }    ]
+  },
+  {
+    title: "توصيل - حضور العلامة التجارية في اللوجستيات",
+    desc: "تصميم علامة تجارية رقمية استراتيجية لتوصيل لتعزيز موقعها في سوق الخدمات اللوجستية والتوصيل.",
+    meta: ["علامة لوجستية", "الحضور الرقمي"],
+    category: "private",
+    videos: [
+      { src: "https://drive.google.com/file/d/1lA0BtIzGBq_Mv4mnXmHUnvxmkDRB4ths/preview", title: "Tawseel 1" },
+  { src: "https://drive.google.com/file/d/1SrHKP9gARwrmVRNxfRU-rELqH-tk6skz/preview", title: "Tawseel 2" },
+  { src: "https://drive.google.com/file/d/1EcTUVMvvnflLCGCWH83p2_AGZVS-SsQN/preview", title: "Tawseel 3" }]
+  },
+  {
+    title: "بنك النيل - حملة خدمات مالية",
+    desc: "حملة متميزة لبنك النيل تركز على الخدمات المصرفية الرقمية والثقة والتفاعل مع العملاء.",
+    meta: ["حملة مالية", "بناء الثقة"],
+    category: "private",
+    videos: [
+      { src: "https://drive.google.com/file/d/1oCuvzOlxvxexXPjpK5wU_vHTQSJcDdRY/preview", title: "بنك النيل" },
+      { src: "https://drive.google.com/file/d/1s662yKWmOSfuhNqaCSuomARZ8mpiOS9L/preview", title: "بنك النيل" },
+      { src: "https://drive.google.com/file/d/1e2wRq18k-SZUHMxt9DxaNXxZIvPibSVV/preview", title: "بنك النيل" },
+      { src: "https://drive.google.com/file/d/1273dbC_N3Gw5qXBv-VYTVaQpUbZtwDvz/preview", title: "بنك النيل" },
+    ]
+  },
+  {
+    title: "شركة خالد دقاش الطبية - الهوية التجارية والحضور الرقمي",
+    desc: "تطوير هوية تجارية شاملة وحضور رقمي للشركة الطبية، بما في ذلك حملات العلامات التجارية الاستراتيجية والإعلانات المقنعة بصرياً التي تعكس التزام الشركة بالتميز في الرعاية الصحية.",
+    meta: ["فيديو العلامة التجارية", "الهوية البصرية"],
+    category: "private",
+    videos: []
+  },
+],
       },
       process: {
         title: "عمليتنا",
@@ -515,7 +587,7 @@ function App() {
   };
 
   const currentContent = isArabic ? content.ar : content.en;
-
+  
   return (
     <div className={`app ${isArabic ? "rtl" : "ltr"}`}>
       <nav className="navbar" ref={navRef}>
@@ -534,10 +606,10 @@ function App() {
           <li>
             <a
               href="#about"
-              className={activeSection === 'about' ? 'active' : ''}
+              className={activeSection === "about" ? "active" : ""}
               onClick={() => {
                 setMenuOpen(false);
-                setActiveSection('about');
+                setActiveSection("about");
               }}>
               {currentContent.nav.about}
             </a>
@@ -545,10 +617,10 @@ function App() {
           <li>
             <a
               href="#services"
-              className={activeSection === 'services' ? 'active' : ''}
+              className={activeSection === "services" ? "active" : ""}
               onClick={() => {
                 setMenuOpen(false);
-                setActiveSection('services');
+                setActiveSection("services");
               }}>
               {currentContent.nav.services}
             </a>
@@ -556,10 +628,10 @@ function App() {
           <li>
             <a
               href="#partners"
-              className={activeSection === 'partners' ? 'active' : ''}
+              className={activeSection === "partners" ? "active" : ""}
               onClick={() => {
                 setMenuOpen(false);
-                setActiveSection('partners');
+                setActiveSection("partners");
               }}>
               {currentContent.nav.partners}
             </a>
@@ -567,10 +639,10 @@ function App() {
           <li>
             <a
               href="#work"
-              className={activeSection === 'work' ? 'active' : ''}
+              className={activeSection === "work" ? "active" : ""}
               onClick={() => {
                 setMenuOpen(false);
-                setActiveSection('work');
+                setActiveSection("work");
               }}>
               {currentContent.nav.work}
             </a>
@@ -578,10 +650,10 @@ function App() {
           <li>
             <a
               href="#footer"
-              className={activeSection === 'footer' ? 'active' : ''}
+              className={activeSection === "footer" ? "active" : ""}
               onClick={() => {
                 setMenuOpen(false);
-                setActiveSection('footer');
+                setActiveSection("footer");
               }}>
               {currentContent.nav.contact}
             </a>
@@ -695,7 +767,9 @@ function App() {
                 <div key={index} className="partner-slide">
                   <img
                     src={logo}
-                    alt={currentContent.partners.list[index % partnerLogos.length]}
+                    alt={
+                      currentContent.partners.list[index % partnerLogos.length]
+                    }
                     className="partner-logo"
                   />
                 </div>
@@ -714,28 +788,36 @@ function App() {
             {currentContent.work.tabs.map((tab, index) => (
               <button
                 key={index}
-                className={`tab-button ${activeTab === ['governmental', 'humanitarian', 'private'][index] ? 'active' : ''}`}
-                onClick={() => setActiveTab(['governmental', 'humanitarian', 'private'][index])}
-              >
+                className={`tab-button ${activeTab === ["governmental", "humanitarian", "private"][index] ? "active" : ""}`}
+                onClick={() =>
+                  setActiveTab(
+                    ["governmental", "humanitarian", "private"][index],
+                  )
+                }>
                 {tab}
               </button>
             ))}
           </div>
+
           <div className="project-list">
-            {currentContent.work.projects.filter(project => project.category === activeTab).map((project, index) => (
-              <article key={index} className="project-card">
-                <h3>{project.title}</h3>
-                <p>{project.desc}</p>
-                <div className="project-meta">
-                  {project.meta.map((meta, i) => (
-                    <span key={i}>
-                      <i className="fas fa-play"></i>
-                      {meta}
-                    </span>
-                  ))}
-                </div>
-              </article>
-            ))}
+            {currentContent.work.projects
+              .filter((project) => project.category === activeTab)
+              .map((project, index) => (
+                <article key={index} className="project-card">
+                  <h3>{project.title}</h3>
+                  <p>{project.desc}</p>
+                  <div className="videos-grid">
+                   {project.videos && project.videos.map((video, videoIndex) => (
+            <VideoViewer 
+              key={videoIndex} 
+              src={video.src} 
+              title={video.title} 
+            />
+          ))}
+                      
+                  </div>
+                </article>
+              ))}
           </div>
         </div>
       </section>
@@ -782,7 +864,6 @@ function App() {
         </div>
       </section>
 
-
       <footer className="footer" id="footer">
         <div className="container footer-grid">
           <div className="footer-brand">
@@ -811,6 +892,8 @@ function App() {
           <p>{currentContent.footer.copyright}</p>
         </div>
       </footer>
+
+      
     </div>
   );
 }
