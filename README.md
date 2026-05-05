@@ -1,40 +1,43 @@
-# Sharik Creatives Website
+# Sharik Creatives — React Project
 
-A React website for Sharik Media Company built with Vite and Tailwind CSS.
+موقع شارك كريتفز كمشروع React + Vite.
 
-## Features
+## التشغيل المحلي
 
-- Responsive design with new brand colors (#FF6348 and #E5E6FA)
-- Placeholders for logo, images, and videos
-- Sections: Header, Hero, About, Services, Portfolio, Contact, Footer
-
-## Getting Started
-
-1. Install dependencies:
-   ```
-   npm install
-   ```
-
-2. Start the development server:
-   ```
-   npm run dev
-   ```
-
-3. Open your browser to `http://localhost:5173`
-
-## Build for Production
-
+```bash
+npm install
+npm run dev
 ```
+
+الموقع راح يفتح على `http://localhost:5173`.
+
+## البناء للنشر
+
+```bash
 npm run build
 ```
 
-## Technologies Used
+الناتج في مجلد `dist/` — ارفعه على أي استضافة ساكنة (Netlify, Vercel, GitHub Pages…).
 
-- React
-- Vite
-- Tailwind CSS
+## بنية المشروع
 
-## Notes
+```
+react-project/
+├── index.html               # الـ entry HTML
+├── package.json
+├── vite.config.js
+├── public/
+│   └── assets/
+│       ├── hero.png
+│       └── logos/           # شعارات الشركاء
+└── src/
+    ├── main.jsx             # نقطة البداية
+    ├── App.jsx              # المكون الرئيسي
+    ├── styles.css           # كل الـ CSS
+    └── data/
+        ├── content.js       # نصوص العربي والإنجليزي
+        └── projects.js      # المشاريع والفيديوهات
+```
 
-- Replace placeholders with actual logo, images, and videos.
-- Customize content as needed.
+## الأصول
+كل الصور في `public/assets/`. لما تضيف صور جديدة، حطها هناك واستدعِها بمسار `/assets/...`.

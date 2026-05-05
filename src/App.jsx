@@ -1,731 +1,215 @@
-import { useState, useEffect, useRef } from "react";
-import mneLogo from "./assets/logos/MNE.jpg";
-import smrcLogo from "./assets/logos/smrc.jpeg";
-import unicefLogo from "./assets/logos/unicef.png";
-import modaLogo from "./assets/logos/moda.PNG";
-import saifLogo from "./assets/logos/saif_aldawla.jpg";
-import kingSalmanLogo from "./assets/logos/king_salman.jpeg";
-import primeLogo from "./assets/logos/prime_disel.PNG";
-import oneSudanLogo from "./assets/logos/one_sudan.png";
-import alnileBankLogo from "./assets/logos/alnilebank.jfif";
-import fadcncLogo from "./assets/logos/fadcnc.png";
-import sadaqaatLogo from "./assets/logos/sadagaat.png";
-import tawseelLogo from "./assets/logos/tawseel.png";
-import sharikLogo from "./assets/logos/sharik.png";
-import sharik2Logo from "./assets/logos/sharik2.jpeg";
-import khalidDagashLogo from "./assets/logos/khalid_dagash.jpeg";
+import React, { useState, useEffect, useRef } from 'react';
+import { content, heroImages, sharikLogo, partnerLogos } from './data/content.js';
+import { projectsByLang } from './data/projects.js';
 
-function VideoViewer(props) {
-    return (
-      <div className="video-example">
-        <div className="video-wrapper">
-          <iframe
-            src={props.src}
-            title={props.title}
-            frameBorder="0"
-            allow="autoplay; encrypted-media"
-            allowFullScreen></iframe>
-        </div>
-        <h3>{props.title}</h3>
+function VideoViewer({ src, title }) {
+  return (
+    <div className="video-example">
+      <div className="video-wrapper">
+        <iframe src={src} title={title} frameBorder="0" allow="autoplay; encrypted-media" allowFullScreen></iframe>
       </div>
-    );
-  }
+      <h3>{title}</h3>
+    </div>
+  );
+}
 
+function ProjectCard({ project, isArabic }) {
+  const [expanded, setExpanded] = useState(false);
+  const VIDEO_LIMIT = 5;
+  const videos = project.videos || [];
+  const hasMore = videos.length > VIDEO_LIMIT;
+  const visible = expanded ? videos : videos.slice(0, VIDEO_LIMIT);
 
-function App() {
+  return (
+    <article className="project-card">
+      <h3>{project.title}</h3>
+      <p>{project.desc}</p>
+      {videos.length > 0 && (
+        <>
+          <div className="videos-grid">
+            {visible.map((v, j) => (
+              <VideoViewer key={j} src={v.src} title={v.title} />
+            ))}
+          </div>
+          {hasMore && (
+            <div className="show-more-wrap">
+              <button className={`show-more-btn ${expanded ? 'expanded' : ''}`}
+                      onClick={() => setExpanded(!expanded)}>
+                <span>
+                  {expanded
+                    ? (isArabic ? 'عرض أقل' : 'Show less')
+                    : (isArabic ? `عرض المزيد (${videos.length - VIDEO_LIMIT}+)` : `Show more (${videos.length - VIDEO_LIMIT}+)`)}
+                </span>
+                <i className="fas fa-chevron-down"></i>
+              </button>
+            </div>
+          )}
+        </>
+      )}
+    </article>
+  );
+}
+
+export default function App() {
   const [isArabic, setIsArabic] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return localStorage.getItem("language") === "ar";
+    if (typeof window === 'undefined') return true;
+    const saved = localStorage.getItem('language');
+    return saved ? saved === 'ar' : true;
   });
   const [menuOpen, setMenuOpen] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [activeTab, setActiveTab] = useState("governmental");
-  const [activeSection, setActiveSection] = useState("about");
-  const [expandedProjects, setExpandedProjects] = useState({});
-  const [selectedVideo, setSelectedVideo] = useState(null);
+  const [activeTab, setActiveTab] = useState('governmental');
+  const [activeSection, setActiveSection] = useState('about');
   const navRef = useRef(null);
-
-
-  
-
-  const toggleProjectExpand = (index) => {
-    setExpandedProjects((prev) => ({ ...prev, [index]: !prev[index] }));
-  };
-
-  const images = [
-    "https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=1920&h=1080&fit=crop&crop=center",
-    "https://images.unsplash.com/photo-1551434678-e076c223a692?w=1920&h=1080&fit=crop&crop=center",
-    "https://images.unsplash.com/photo-1552664688-cf412ec27db2?w=1920&h=1080&fit=crop&crop=center",
-    "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1920&h=1080&fit=crop&crop=center",
-  ];
-
-  const partnerLogos = [
-    mneLogo,
-    smrcLogo,
-    unicefLogo,
-    modaLogo,
-    saifLogo,
-    kingSalmanLogo,
-    primeLogo,
-    oneSudanLogo,
-    alnileBankLogo,
-    fadcncLogo,
-    sadaqaatLogo,
-    tawseelLogo,
-    khalidDagashLogo,
-  ];
 
   const marqueeLogos = [...partnerLogos, ...partnerLogos];
 
-  const toggleLanguage = () => {
-    setIsArabic(!isArabic);
-  };
-
   useEffect(() => {
-    localStorage.setItem("language", isArabic ? "ar" : "en");
+    localStorage.setItem('language', isArabic ? 'ar' : 'en');
+    document.documentElement.lang = isArabic ? 'ar' : 'en';
+    document.documentElement.dir = isArabic ? 'rtl' : 'ltr';
   }, [isArabic]);
 
-  const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
-  };
-
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (navRef.current && !navRef.current.contains(event.target)) {
-        setMenuOpen(false);
-      }
+    const handleClickOutside = (e) => {
+      if (navRef.current && !navRef.current.contains(e.target)) setMenuOpen(false);
     };
-
-    if (menuOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    if (menuOpen) document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [menuOpen]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prevSlide) => (prevSlide + 1) % images.length);
-    }, 5000); // Change slide every 5 seconds
-
+    const interval = setInterval(() => setCurrentSlide(s => (s + 1) % heroImages.length), 5000);
     return () => clearInterval(interval);
-  }, [images.length]);
+  }, []);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("in-view");
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.18 },
-    );
-
-    document.querySelectorAll(".animate-on-scroll").forEach((element) => {
-      observer.observe(element);
-    });
-
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.18 });
+    document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
     return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
-    const sections = document.querySelectorAll("section[id], footer#footer");
-    const sectionObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id || "footer");
-          }
-        });
-      },
-      { threshold: 0.35 },
-    );
-
-    sections.forEach((section) => sectionObserver.observe(section));
+    const sections = document.querySelectorAll('section[id], footer#footer');
+    const sectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) setActiveSection(entry.target.id || 'footer');
+      });
+    }, { threshold: 0.35 });
+    sections.forEach(s => sectionObserver.observe(s));
     return () => sectionObserver.disconnect();
   }, []);
 
-  const content = {
-    en: {
-      nav: {
-        about: "About",
-        services: "Services",
-        partners: "Partners",
-        work: "Work",
-        contact: "Contact",
-      },
-      hero: {
-        title: "Sharik Creatives",
-        subtitle: "Media crafted for influence and growth",
-        year: "2026",
-        caption: "Company Portfolio",
-      },
-      about: {
-        title: "About Us",
-        text: "At Sharik Creatives, we believe creativity is not decoration, it is a strategic tool that shapes perception, builds trust, and supports brands and corporate goals.",
-      },
-      whyChoose: {
-        title: "Why choose us as your growth partner?",
-        features: [
-          "Strategic thinking before design",
-          "Data-driven creativity",
-          "Hands-on market experience",
-          "Structured workflows",
-          "Large-scale campaigns",
-        ],
-      },
-      services: {
-        title: "Our Services",
-        items: [
-          {
-            title: "Digital Solutions",
-            list: ["Social media strategy & management", "Content creation"],
-          },
-          {
-            title: "Creative & Design",
-            list: [
-              "Branding",
-              "Video production",
-              "Social media designs",
-              "Motion Graphics",
-            ],
-          },
-          {
-            title: "Marketing & Campaign Execution",
-            list: [
-              "Integrated marketing campaigns",
-              "Public awareness campaigns",
-            ],
-          },
-        ],
-      },
-      partners: {
-        title: "Our Valued Partners",
-        list: [
-          "Ministry of National Education",
-          "Sudanese Mineral Resources Company",
-          "UNICEF",
-          "Moda Steel Factory",
-          "Saif Al-Dawla Food Industries",
-          "King Salman Humanitarian Aid Centre",
-          "Prime Diesel",
-          "One Sudan",
-          "Al Nile Bank",
-          "FAD CNC",
-          "Sadagaat",
-          "Tawseel",
-          "Khalid Dagash",
-        ],
-      },
-      work: {
-        title: "A Glimpse of Our Work",
-        tabs: ["Governmental", "Humanitarian", "Private Companies"],
-        projects: [
-          {
-            title:
-              "Ministry of National Education - Madrasati Awlan campaign - 2026",
-            desc: "Sharik Creatives ran and executed a full campaign for the ministry of education, starting from launching the ministry’s social media platforms to producing all digital products, videos, statics, and news.",
-            meta: ["Campaign Films", "Graphic Assets", "Launch Strategy"],
-            category: "governmental",
-            videos: [
-    { src: "https://drive.google.com/file/d/1ZXedinBb2pItP7p57198wheuF8iwRT5n/preview", title: "فيديو 1" },
-  ]
-          },
-          {
-            title:
-              "Sudanese Mineral Resources Company Limited - Documentary Film – Corporate Social Responsibility 2024",
-            desc: "A comprehensive documentary highlighting social responsibility initiatives across the Eastern, Northern, and Central sectors, delivered as a full end-to-end production including filming, editing, and directing.",
-            meta: ["Documentary"],
-            category: "governmental",
-          },
-          {
-            title: "UNICEF – E-Learning Project",
-            desc: "Comprehensive media coverage of the Regional Director’s visit to the E-Learning Center in Al-Iskan, Port Sudan, highlighting key educational initiatives through professional filming, editing, and full production execution.",
-            meta: ["Educational Video"],
-            category: "humanitarian",
-          },
-          {
-            title:
-              "King Salman Humanitarian Aid & Relief Centre – Food Security Support Project 2024",
-            desc: "Production of an official launch video for the Food Security Support Project in Sudan, highlighting the initiative’s goals and impact through professional filming and editing.",
-            meta: ["Launch Video"],
-            category: "humanitarian",
-          },
-          {
-            title: "Moda Steel Factory – Brand Identity & Digital Presence",
-            desc: "Building a strong and consistent digital presence for the brand through a strategic branding campaign and a visually driven branding advertisement that reflects the brand’s identity and values.",
-            meta: ["Brand Video", "Visual Identity"],
-            category: "private",
-          },
-          {
-            title:
-              "Saif Al-Dawla Food Industries – Social Media Management & Advertising Campaigns",
-            desc: "Comprehensive management of social media platforms and execution of targeted advertising campaigns to enhance brand awareness and engage the audience effectively.",
-            meta: ["Campaign Content"],
-            category: "private",
-          },
-          {
-            title: "Prime Diesel – Corporate Interviews",
-            desc: "Production of a series of professional interviews with company directors, showcasing their roles, responsibilities, and contributions to the organization through high-quality filming and editing.",
-            meta: ["Interview Series"],
-            category: "private",
-          },
-          {
-            title: "One Sudan – Official Company Advertisement",
-            desc: "Execution of a polished official advertisement for One Sudan, designed to elevate the brand story with striking visuals and strategic messaging.",
-            meta: ["Brand Advertisement"],
-            category: "private",
-          },
-          {
-            title: "Sadagaat – Humanitarian Support Campaign",
-            desc: "A compassionate media campaign that amplifies humanitarian impact and support stories for Sadagaat’s relief work.",
-            meta: ["Awareness Campaign", "Storytelling"],
-            category: "humanitarian",
-          },
-          {
-            title: "FAD CNC – Industrial Branding Campaign",
-            desc: "A modern visual identity and promotional campaign for FAD CNC, tailored to technical and industrial audiences.",
-            meta: ["Corporate Branding", "Industry Messaging"],
-            category: "private",
-          },
-          {
-            title: "Tawseel – Logistics Brand Presence",
-            desc: "Strategic brand and digital design for Tawseel to strengthen its position in the logistics and delivery market.",
-            meta: ["Logistics Branding", "Digital Presence"],
-            category: "private",
-          },
-          {
-            title: "Al Nile Bank – Financial Services Campaign",
-            desc: "A premium campaign for Al Nile Bank focusing on digital banking services, trust, and customer engagement.",
-            meta: ["Financial Campaign", "Brand Trust"],
-            category: "private",
-          },
-          {
-            title:
-              "Khalid Daqash Medical Company - Brand Identity & Digital Presence",
-            desc: "Developing a comprehensive brand identity and digital presence for the medical company, including strategic branding campaigns and visually compelling advertisements that reflect the company's commitment to healthcare excellence.",
-            meta: ["Brand Video", "Visual Identity"],
-            category: "private",
-          },
-        ],
-      },
-      process: {
-        title: "Our Process",
-        steps: [
-          "Understanding & Research",
-          "Strategy Development",
-          "Creative Concepting",
-          "Design & Content Production",
-          "Review & Alignment",
-          "Launch & Evaluation",
-        ],
-      },
-      vision: {
-        title: "Vision",
-        text: "Long-term contribution to corporate & private sector branding",
-      },
-      mission: {
-        title: "Mission",
-        text: "Delivering creative solutions aligned with strategic objectives",
-      },
-      values: {
-        title: "Core Values",
-        list: [
-          "Integrity - Accountability",
-          "Cultural awareness - Professionalism",
-        ],
-      },
-      contact: {
-        title: "Contact Us",
-        getInTouch: "Get In Touch",
-        followUs: "Follow Us",
-      },
-      footer: {
-        brandLine: "Sharik Creatives — Creative media for influence and growth",
-        copyright: "© 2026 Sharik Creatives. All rights reserved.",
-      },
-    },
-    ar: {
-      nav: {
-        about: "من نحن",
-        services: "خدماتنا",
-        partners: "شركاؤنا",
-        work: "أعمالنا",
-        contact: "تواصل معنا",
-      },
-      hero: {
-        title: "شارك كريتفز",
-        subtitle: "وسائط مصممة للتأثير والنمو",
-        year: "2026",
-        caption: "محفظة الشركة",
-      },
-      about: {
-        title: "من نحن",
-        text: "في شارك كريتفز، نؤمن أن الإبداع ليس مجرد زخرفة، بل أداة استراتيجية تشكل الإدراك، تبني الثقة، وتدعم أهداف العلامات التجارية والشركات.",
-      },
-      whyChoose: {
-        title: "لماذا تختارنا كشريك نموك؟",
-        features: [
-          "التفكير الاستراتيجي قبل التصميم",
-          "الإبداع المبني على البيانات",
-          "خبرة عملية في السوق",
-          "سير عمل منظم",
-          "حملات واسعة النطاق",
-        ],
-      },
-      services: {
-        title: "خدماتنا",
-        items: [
-          {
-            title: "الحلول الرقمية",
-            list: [
-              "استراتيجية وسائل التواصل الاجتماعي وإدارتها",
-              "إنشاء المحتوى",
-            ],
-          },
-          {
-            title: "الإبداع والتصميم",
-            list: [
-              "العلامات التجارية",
-              "إنتاج الفيديو",
-              "تصاميم وسائل التواصل",
-              "الرسوم المتحركة",
-            ],
-          },
-          {
-            title: "التسويق وتنفيذ الحملات",
-            list: ["حملات تسويق متكاملة", "حملات التوعية العامة"],
-          },
-        ],
-      },
-      partners: {
-        title: "شركاؤنا الكرام",
-        list: [
-          "وزارة التعليم والتربية الوطنية",
-          "الشركة السودانية للموارد المعدنية",
-          "اليونسيف",
-          "مصنع مودا للصلب",
-          "صناعات سيف الدولة الغذائية",
-          "مركز الملك سلمان للإغاثة",
-          "برايم ديزل",
-          "وان سودان",
-          "بنك النيل",
-          "FAD CNC",
-          "صدقات",
-          "توصيل",
-          "خالد دقاش",
-        ],
-      },
-      work: {
-        title: "نظرة على أعمالنا",
-        tabs: ["حكومية", "إنسانية", "شركات خاصة"],
-        projects: [
-  {
-    title: "وزارة التعليم الوطني - حملة مدرستي أولان - 2026",
-    desc: "قامت شارك كريتفز بتشغيل وتنفيذ حملة كاملة لوزارة التعليم، بدءاً من إطلاق منصات التواصل الاجتماعي للوزارة وإنتاج جميع المنتجات الرقمية والفيديوهات والصور الثابتة والأخبار.",
-    meta: ["أفلام الحملة", "الأصول الجرافيكية", "استراتيجية الإطلاق"],
-    category: "governmental",
-    videos: []
-  },
-  {
-    title: "الشركة السودانية للموارد المعدنية - فيلم وثائقي - المسؤولية الاجتماعية للشركات 2024",
-    desc: "فيلم وثائقي شامل يبرز مبادرات المسؤولية الاجتماعية عبر القطاعات الشرقية والشمالية والوسطى، تم تسليمه كإنتاج شامل من البداية إلى النهاية بما في ذلك التصوير والتحرير والإخراج.",
-    meta: ["الفيلم الوثائقي"],
-    category: "governmental",
-    videos: [
-      { src: "https://drive.google.com/file/d/1aoDU9kkf2n7_B0aht_rxzJX5kPxiq6xe/preview", title: "فيلم المسؤولية المجتمعية" }
-    ]
-  },
-  {
-    title: "اليونسيف - مشروع التعلم الإلكتروني",
-    desc: "تغطية إعلامية شاملة لزيارة المدير الإقليمي لمركز التعلم الإلكتروني في الإسكان، بورتسودان، مع تسليط الضوء على المبادرات التعليمية من خلال التصوير والتحرير والإنتاج المهني الكامل.",
-    meta: ["الفيديو التعليمي"],
-    category: "humanitarian",
-    videos: [
-      { src: "https://drive.google.com/file/d/1ZXedinBb2pItP7p57198wheuF8iwRT5n/preview", title: "مشروع التعليم الالكتروني" }
-    ]
-  },
-  {
-    title: "مركز الملك سلمان للإغاثة والمساعدات الإنسانية - مشروع دعم الأمن الغذائي 2024",
-    desc: "إنتاج فيديو إطلاق رسمي لمشروع دعم الأمن الغذائي في السودان، مع تسليط الضوء على أهداف المشروع وتأثيره من خلال التصوير والتحرير المهني.",
-    meta: ["فيديو الإطلاق"],
-    category: "humanitarian",
-    videos: []
-  },
-  {
-    title: "مصنع مودا للصلب - الهوية التجارية والحضور الرقمي",
-    desc: "بناء حضور رقمي قوي ومتسق للعلامة التجارية من خلال حملة علامة تجارية استراتيجية وإعلان علامة تجارية مدفوع بصرياً يعكس هوية العلامة وقيمها.",
-    meta: ["فيديو العلامة التجارية", "الهوية البصرية"],
-    category: "private",
-    videos: [
-      { src: "https://drive.google.com/file/d/1ylNJ85jJNdjBZ9Uo_uOmkicAU1JW_1md/preview", title: "اغنية مودا معانا" },
-      { src: "https://drive.google.com/file/d/1BOj8OX5UQcd1479io9LVGXPl_XO-01PD/preview", title: "مودا - اعلان" },
-    
-  { src: "https://drive.google.com/file/d/1vWjMdjr0lNPSdxUrig1huw5eA08RCQxD/preview", title: "حملة تحدي الثبات 1" },
-  { src: "https://drive.google.com/file/d/105NxVUQgEyvumyC5a6911TvBbMDqNgc1/preview", title: "حملة تحدي الثبات 2" },
-  { src: "https://drive.google.com/file/d/1NVS21Tvhyedne97hFYZf-fCBVr7mSsbE/preview", title: "حملة تحدي الثبات 3" },
-  { src: "https://drive.google.com/file/d/1ZvufFu-rUFMVopAGfgjmMfNWOzIf7IWW/preview", title: "حملة تحدي الثبات 4" },
-  { src: "https://drive.google.com/file/d/1WSvdchKyKIJGsvKPeKCKt6-Aa57dQkOI/preview", title: "حملة تحدي الثبات 5" },
-  { src: "https://drive.google.com/file/d/1J-Aa81-RysDkD37v_unW0KcQoDQZRn4t/preview", title: "حملة تحدي الثبات 6" },
-  { src: "https://drive.google.com/file/d/1N-PCLUluKw6sU2nvJpLmTgDFv11PPxQW/preview", title: "حملة تحدي الثبات 7" },
-  { src: "https://drive.google.com/file/d/1cCgzQkTpniUhOxc_0615ETT065NNp9nH/preview", title: "حملة تحدي الثبات 8" }
-]
-  },
-  {
-    title: "صناعات سيف الدولة الغذائية - إدارة وسائل التواصل الاجتماعي وحملات الإعلان",
-    desc: "إدارة شاملة لمنصات وسائل التواصل الاجتماعي وتنفيذ حملات إعلانية مستهدفة لتعزيز الوعي بالعلامة التجارية وجذب الجمهور بشكل فعال.",
-    meta: ["محتوى الحملة"],
-    category: "private",
-    videos: []
-  },
-  {
-    title: "برايم ديزل - مقابلات شركات",
-    desc: "إنتاج سلسلة من المقابلات المهنية مع مديري الشركة، مع عرض أدوارهم ومسؤولياتهم ومساهماتهم في المنظمة من خلال التصوير والتحرير عالي الجودة.",
-    meta: ["سلسلة المقابلات"],
-    category: "private",
-    videos: []
-  },
-  {
-    title: "وان سودان - إعلان رسمي للشركة",
-    desc: "تنفيذ إعلان رسمي مصقول لوان سودان، مصمم لتقوية الرسالة المؤسسية من خلال مرئيات عالية الجودة وسرد مؤثر.",
-    meta: ["إعلان العلامة التجارية"],
-    category: "private",
-    videos: [
-      { src: "https://drive.google.com/file/d/1tHO6W1g38GN-vaVGFfRliJ8iE2Mpjda6/preview", title: "وان سودان" }
-    ]
-  },
-  {
-    title: "صدقات - حملة الدعم الإنساني",
-    desc: "حملة إعلامية إنسانية تبرز أعمال صدقات الإغاثية وتدعم التواصل مع الجمهور بمحتوى مؤثر.",
-    meta: ["حملة توعية", "سرد القصص"],
-    category: "humanitarian",
-    videos: [
-      { src: "https://drive.google.com/file/d/1BZ0fWC1jmuJfiU3m0kI2K4FtpUXagU0I/preview", title: "صدقات - يلا نتعلم" }
-    ]
-  },
-  {
-    title: "FAD CNC - حملة العلامة التجارية الصناعية",
-    desc: "هوية بصرية حديثة وحملة ترويجية لفاد سي ان سي مصممة لجمهور القطاع الصناعي.",
-    meta: ["العلامة التجارية المؤسسية", "رسائل صناعية"],
-    category: "private",
-    videos: [
-{ src: "https://drive.google.com/file/d/1jnXcAkNek5FYQFLiJr8t3-cipBP94C-F/preview", title: "FAD CNC 1" },
-  { src: "https://drive.google.com/file/d/1G0uLRPLCdEZj6waUzlC40w-NtqVQtB54/preview", title: "FAD CNC 2" },
-  { src: "https://drive.google.com/file/d/1Z-US6U7Y5hRa9wEyE9s_ue1KZq87rWsm/preview", title: "FAD CNC 3" },
-  { src: "https://drive.google.com/file/d/1q_z5DBnf7ps2AB5NPY89lkYI0vEbtOHC/preview", title: "FAD CNC 4" },
-  { src: "https://drive.google.com/file/d/12wJH7T8jNrYHL00Wh9FXRb9r4m5nX7zD/preview", title: "FAD CNC 5" }    ]
-  },
-  {
-    title: "توصيل - حضور العلامة التجارية في اللوجستيات",
-    desc: "تصميم علامة تجارية رقمية استراتيجية لتوصيل لتعزيز موقعها في سوق الخدمات اللوجستية والتوصيل.",
-    meta: ["علامة لوجستية", "الحضور الرقمي"],
-    category: "private",
-    videos: [
-      { src: "https://drive.google.com/file/d/1lA0BtIzGBq_Mv4mnXmHUnvxmkDRB4ths/preview", title: "Tawseel 1" },
-  { src: "https://drive.google.com/file/d/1SrHKP9gARwrmVRNxfRU-rELqH-tk6skz/preview", title: "Tawseel 2" },
-  { src: "https://drive.google.com/file/d/1EcTUVMvvnflLCGCWH83p2_AGZVS-SsQN/preview", title: "Tawseel 3" }]
-  },
-  {
-    title: "بنك النيل - حملة خدمات مالية",
-    desc: "حملة متميزة لبنك النيل تركز على الخدمات المصرفية الرقمية والثقة والتفاعل مع العملاء.",
-    meta: ["حملة مالية", "بناء الثقة"],
-    category: "private",
-    videos: [
-      { src: "https://drive.google.com/file/d/1oCuvzOlxvxexXPjpK5wU_vHTQSJcDdRY/preview", title: "بنك النيل" },
-      { src: "https://drive.google.com/file/d/1s662yKWmOSfuhNqaCSuomARZ8mpiOS9L/preview", title: "بنك النيل" },
-      { src: "https://drive.google.com/file/d/1e2wRq18k-SZUHMxt9DxaNXxZIvPibSVV/preview", title: "بنك النيل" },
-      { src: "https://drive.google.com/file/d/1273dbC_N3Gw5qXBv-VYTVaQpUbZtwDvz/preview", title: "بنك النيل" },
-    ]
-  },
-  {
-    title: "شركة خالد دقاش الطبية - الهوية التجارية والحضور الرقمي",
-    desc: "تطوير هوية تجارية شاملة وحضور رقمي للشركة الطبية، بما في ذلك حملات العلامات التجارية الاستراتيجية والإعلانات المقنعة بصرياً التي تعكس التزام الشركة بالتميز في الرعاية الصحية.",
-    meta: ["فيديو العلامة التجارية", "الهوية البصرية"],
-    category: "private",
-    videos: []
-  },
-],
-      },
-      process: {
-        title: "عمليتنا",
-        steps: [
-          "الفهم والبحث",
-          "تطوير الاستراتيجية",
-          "التصور الإبداعي",
-          "التصميم وإنتاج المحتوى",
-          "المراجعة والتوافق",
-          "الإطلاق والتقييم",
-        ],
-      },
-      vision: {
-        title: "الرؤية",
-        text: "المساهمة طويلة الأمد في العلامات التجارية للقطاعين العام والخاص",
-      },
-      mission: {
-        title: "الرسالة",
-        text: "تقديم حلول إبداعية تتماشى مع الأهداف الاستراتيجية",
-      },
-      values: {
-        title: "القيم الأساسية",
-        list: ["النزاهة - المساءلة", "الوعي الثقافي - المهنية"],
-      },
-      contact: {
-        title: "تواصل معنا",
-        getInTouch: "تواصل معنا",
-        followUs: "تابعنا",
-      },
-      footer: {
-        brandLine: "شارك كرييتفز — وسائط مبدعة للتأثير والنمو",
-        copyright: "© 2026 شارك كرييتفز. جميع الحقوق محفوظة.",
-      },
-    },
-  };
+  const c = isArabic ? content.ar : content.en;
+  const projects = isArabic ? projectsByLang.ar : projectsByLang.en;
 
-  const currentContent = isArabic ? content.ar : content.en;
-  
+  const featureIcons = ['brain', 'chart-line', 'users', 'cogs', 'rocket'];
+  const serviceIcons = ['share-alt', 'palette', 'bullhorn'];
+  const processIcons = ['search', 'lightbulb', 'pencil-alt', 'tools', 'check-circle', 'rocket'];
+  const tabKeys = ['governmental', 'humanitarian', 'private'];
+
   return (
-    <div className={`app ${isArabic ? "rtl" : "ltr"}`}>
+    <div className={`app ${isArabic ? 'rtl' : 'ltr'}`}>
       <nav className="navbar" ref={navRef}>
         <img src={sharikLogo} alt="Sharik Logo" className="nav-logo-img" />
         <div className="nav-right">
-          <button
-            className="hamburger"
-            onClick={toggleMenu}
-            aria-label="Toggle menu">
-            <span></span>
-            <span></span>
-            <span></span>
+          <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu">
+            <span></span><span></span><span></span>
           </button>
         </div>
-        <ul className={`nav-links ${menuOpen ? "open" : ""}`}>
+        <ul className={`nav-links ${menuOpen ? 'open' : ''}`}>
+          {[
+            { id: 'about', label: c.nav.about },
+            { id: 'services', label: c.nav.services },
+            { id: 'partners', label: c.nav.partners },
+            { id: 'work', label: c.nav.work },
+            { id: 'footer', label: c.nav.contact },
+          ].map(item => (
+            <li key={item.id}>
+              <a href={`#${item.id}`} className={activeSection === item.id ? 'active' : ''}
+                 onClick={() => { setMenuOpen(false); setActiveSection(item.id); }}>
+                {item.label}
+              </a>
+            </li>
+          ))}
           <li>
-            <a
-              href="#about"
-              className={activeSection === "about" ? "active" : ""}
-              onClick={() => {
-                setMenuOpen(false);
-                setActiveSection("about");
-              }}>
-              {currentContent.nav.about}
-            </a>
-          </li>
-          <li>
-            <a
-              href="#services"
-              className={activeSection === "services" ? "active" : ""}
-              onClick={() => {
-                setMenuOpen(false);
-                setActiveSection("services");
-              }}>
-              {currentContent.nav.services}
-            </a>
-          </li>
-          <li>
-            <a
-              href="#partners"
-              className={activeSection === "partners" ? "active" : ""}
-              onClick={() => {
-                setMenuOpen(false);
-                setActiveSection("partners");
-              }}>
-              {currentContent.nav.partners}
-            </a>
-          </li>
-          <li>
-            <a
-              href="#work"
-              className={activeSection === "work" ? "active" : ""}
-              onClick={() => {
-                setMenuOpen(false);
-                setActiveSection("work");
-              }}>
-              {currentContent.nav.work}
-            </a>
-          </li>
-          <li>
-            <a
-              href="#footer"
-              className={activeSection === "footer" ? "active" : ""}
-              onClick={() => {
-                setMenuOpen(false);
-                setActiveSection("footer");
-              }}>
-              {currentContent.nav.contact}
-            </a>
-          </li>
-          <li className="lang-li">
-            <button
-              className="lang-toggle"
-              onClick={toggleLanguage}
-              aria-label="Toggle language">
+            <button className="lang-toggle" onClick={() => setIsArabic(!isArabic)}>
               <i className="fas fa-globe"></i>
-              <span>{isArabic ? "عر" : "EN"}</span>
+              <span>{isArabic ? 'EN' : 'عر'}</span>
             </button>
           </li>
         </ul>
       </nav>
 
       <section className="section section-hero">
+        <div className="hero-bg-grid" />
+        <div className="hero-blob one" />
+        <div className="hero-blob two" />
         <div className="hero-slideshow">
-          {images.map((image, index) => (
-            <div
-              key={index}
-              className={`hero-slide ${index === currentSlide ? "active" : ""}`}
-              style={{ backgroundImage: `url(${image})` }}
-            />
+          {heroImages.map((img, i) => (
+            <div key={i} className={`hero-slide ${i === currentSlide ? 'active' : ''}`}
+                 style={{ backgroundImage: `url(${img})` }} />
           ))}
-        </div>
-        <div className="hero-overlay" />
-        <div className="container hero-content">
-          <div className="hero-copy">
-            <span className="hero-eyebrow">{currentContent.hero.caption}</span>
-            <h1 className="hero-title">{currentContent.hero.title}</h1>
-            <p className="hero-text">{currentContent.hero.subtitle}</p>
-            <div className="hero-actions">
-              <a href="#work" className="button button-primary">
-                {isArabic ? "اعرض أعمالنا" : "View Our Work"}
-              </a>
-              <a href="#footer" className="button button-secondary">
-                {isArabic ? "تواصل معنا" : "Contact Us"}
-              </a>
-            </div>
+          <div className="hero-slide-dots">
+            {heroImages.map((_, i) => (
+              <button key={i} aria-label={`Slide ${i + 1}`}
+                className={`hero-slide-dot ${i === currentSlide ? 'active' : ''}`}
+                onClick={() => setCurrentSlide(i)} />
+            ))}
           </div>
-          <div className="hero-panel">
-            <div className="hero-panel-label">{currentContent.hero.year}</div>
-            <p className="hero-panel-copy">
-              {isArabic
-                ? "نصنع حملات رقمية وهوية بصرية تبقى في الذهن وتحرك الجمهور"
-                : "We deliver digital campaigns, motion-rich visuals, and memorable brand experiences."}
-            </p>
+        </div>
+        <div className="container hero-content">
+          <span className="hero-eyebrow">{c.hero.caption}</span>
+          <h1 className="hero-title">
+            {isArabic ? (<>إبداع <span className="accent">يصنع</span><br/>الفرق</>) : (<>Creative work that <span className="accent">moves</span> brands</>)}
+          </h1>
+          <p className="hero-text">{c.hero.subtitle}</p>
+          <div className="hero-actions">
+            <a href="#work" className="button button-primary">
+              <span>{isArabic ? 'اعرض أعمالنا' : 'View Our Work'}</span>
+              <i className={`fas ${isArabic ? 'fa-arrow-left' : 'fa-arrow-right'}`}></i>
+            </a>
+            <a href="#footer" className="button button-secondary">{isArabic ? 'تواصل معنا' : 'Contact Us'}</a>
+          </div>
+          <div className="hero-stats">
+            <div className="hero-stat">
+              <div className="hero-stat-num">50<span>+</span></div>
+              <div className="hero-stat-label">{isArabic ? 'مشروع منجز' : 'Projects delivered'}</div>
+            </div>
+            <div className="hero-stat">
+              <div className="hero-stat-num">13<span>+</span></div>
+              <div className="hero-stat-label">{isArabic ? 'شريك استراتيجي' : 'Strategic partners'}</div>
+            </div>
+            <div className="hero-stat">
+              <div className="hero-stat-num">100<span>%</span></div>
+              <div className="hero-stat-label">{isArabic ? 'التزام بالجودة' : 'Quality focus'}</div>
+            </div>
           </div>
         </div>
       </section>
 
       <section className="section section-alt animate-on-scroll" id="about">
         <div className="container text-center">
-          <h2 className="section-title">{currentContent.about.title}</h2>
-          <p className="section-copy">{currentContent.about.text}</p>
+          <h2 className="section-title">{c.about.title}</h2>
+          <p className="section-copy">{c.about.text}</p>
         </div>
       </section>
 
       <section className="section animate-on-scroll">
         <div className="container">
-          <h2 className="section-title centered">
-            {currentContent.whyChoose.title}
-          </h2>
+          <h2 className="section-title">{c.whyChoose.title}</h2>
           <div className="feature-grid">
-            {currentContent.whyChoose.features.map((feature, index) => (
-              <article key={index} className="feature-card">
-                <div className="icon-circle">
-                  <i
-                    className={`fas fa-${["brain", "chart-line", "users", "cogs", "rocket"][index]}`}></i>
-                </div>
-                <h3>{feature}</h3>
+            {c.whyChoose.features.map((f, i) => (
+              <article key={i} className="feature-card">
+                <div className="icon-circle"><i className={`fas fa-${featureIcons[i]}`}></i></div>
+                <h3>{f}</h3>
               </article>
             ))}
           </div>
@@ -734,22 +218,13 @@ function App() {
 
       <section className="section section-alt animate-on-scroll" id="services">
         <div className="container">
-          <h2 className="section-title centered">
-            {currentContent.services.title}
-          </h2>
+          <h2 className="section-title">{c.services.title}</h2>
           <div className="service-grid">
-            {currentContent.services.items.map((service, index) => (
-              <article key={index} className="service-card">
-                <div className="icon-circle">
-                  <i
-                    className={`fas fa-${["share-alt", "palette", "bullhorn"][index]}`}></i>
-                </div>
-                <h3>{service.title}</h3>
-                <ul>
-                  {service.list.map((item, i) => (
-                    <li key={i}>{item}</li>
-                  ))}
-                </ul>
+            {c.services.items.map((s, i) => (
+              <article key={i} className="service-card">
+                <div className="icon-circle"><i className={`fas fa-${serviceIcons[i]}`}></i></div>
+                <h3>{s.title}</h3>
+                <ul>{s.list.map((it, j) => <li key={j}>{it}</li>)}</ul>
               </article>
             ))}
           </div>
@@ -758,82 +233,45 @@ function App() {
 
       <section className="section animate-on-scroll" id="partners">
         <div className="container">
-          <h2 className="section-title centered">
-            {currentContent.partners.title}
-          </h2>
-          <div className="partner-grid">
-            <div className="partner-track">
-              {marqueeLogos.map((logo, index) => (
-                <div key={index} className="partner-slide">
-                  <img
-                    src={logo}
-                    alt={
-                      currentContent.partners.list[index % partnerLogos.length]
-                    }
-                    className="partner-logo"
-                  />
-                </div>
-              ))}
-            </div>
+          <h2 className="section-title">{c.partners.title}</h2>
+        </div>
+        <div className="partner-grid">
+          <div className="partner-track">
+            {marqueeLogos.map((logo, i) => (
+              <div key={i} className="partner-slide">
+                <img src={logo.src} alt={logo.name} className="partner-logo" />
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       <section className="section section-alt animate-on-scroll" id="work">
         <div className="container">
-          <h2 className="section-title centered">
-            {currentContent.work.title}
-          </h2>
+          <h2 className="section-title">{c.work.title}</h2>
           <div className="tabs">
-            {currentContent.work.tabs.map((tab, index) => (
-              <button
-                key={index}
-                className={`tab-button ${activeTab === ["governmental", "humanitarian", "private"][index] ? "active" : ""}`}
-                onClick={() =>
-                  setActiveTab(
-                    ["governmental", "humanitarian", "private"][index],
-                  )
-                }>
+            {c.work.tabs.map((tab, i) => (
+              <button key={i} className={`tab-button ${activeTab === tabKeys[i] ? 'active' : ''}`}
+                      onClick={() => setActiveTab(tabKeys[i])}>
                 {tab}
               </button>
             ))}
           </div>
-
           <div className="project-list">
-            {currentContent.work.projects
-              .filter((project) => project.category === activeTab)
-              .map((project, index) => (
-                <article key={index} className="project-card">
-                  <h3>{project.title}</h3>
-                  <p>{project.desc}</p>
-                  <div className="videos-grid">
-                   {project.videos && project.videos.map((video, videoIndex) => (
-            <VideoViewer 
-              key={videoIndex} 
-              src={video.src} 
-              title={video.title} 
-            />
-          ))}
-                      
-                  </div>
-                </article>
-              ))}
+            {projects.filter(p => p.category === activeTab).map((p, i) => (
+              <ProjectCard key={i} project={p} isArabic={isArabic} />
+            ))}
           </div>
         </div>
       </section>
 
       <section className="section animate-on-scroll">
         <div className="container">
-          <h2 className="section-title centered">
-            {currentContent.process.title}
-          </h2>
+          <h2 className="section-title">{c.process.title}</h2>
           <div className="process-grid">
-            {currentContent.process.steps.map((step, index) => (
-              <article key={index} className="process-card">
-                <div className="icon-circle">
-                  <i
-                    className={`fas fa-${["search", "lightbulb", "pencil-alt", "tools", "check-circle", "rocket"][index]}`}></i>
-                </div>
+            {c.process.steps.map((step, i) => (
+              <article key={i} className="process-card">
+                <div className="icon-circle"><i className={`fas fa-${processIcons[i]}`}></i></div>
                 <h3>{step}</h3>
               </article>
             ))}
@@ -845,20 +283,16 @@ function App() {
         <div className="container">
           <div className="vision-grid">
             <article className="vision-card">
-              <h2 className="section-title">{currentContent.vision.title}</h2>
-              <p>{currentContent.vision.text}</p>
+              <h2 className="section-title">{c.vision.title}</h2>
+              <p>{c.vision.text}</p>
             </article>
             <article className="vision-card">
-              <h2 className="section-title">{currentContent.mission.title}</h2>
-              <p>{currentContent.mission.text}</p>
+              <h2 className="section-title">{c.mission.title}</h2>
+              <p>{c.mission.text}</p>
             </article>
             <article className="vision-card">
-              <h2 className="section-title">{currentContent.values.title}</h2>
-              <ul>
-                {currentContent.values.list.map((value, index) => (
-                  <li key={index}>{value}</li>
-                ))}
-              </ul>
+              <h2 className="section-title">{c.values.title}</h2>
+              <ul>{c.values.list.map((v, i) => <li key={i}>{v}</li>)}</ul>
             </article>
           </div>
         </div>
@@ -868,34 +302,35 @@ function App() {
         <div className="container footer-grid">
           <div className="footer-brand">
             <img src={sharikLogo} alt="Sharik Logo" className="footer-logo" />
-            <p>{currentContent.footer.brandLine}</p>
+            <p>{c.footer.brandLine}</p>
           </div>
           <div className="footer-contact">
-            <h3>{currentContent.contact.title}</h3>
-            <p>
-              <i className="fas fa-envelope"></i> info@sharikmedia.com
-            </p>
-            <p>
-              <i className="fas fa-map-marker-alt"></i> Khartoum, Sudan
-            </p>
+            <h3>{c.contact.title}</h3>
+            <div className="footer-contact-list">
+              <a href="mailto:info@sharikmedia.com" className="footer-contact-item">
+                <div className="icon-circle small"><i className="fas fa-envelope"></i></div>
+                <span>info@sharikmedia.com</span>
+              </a>
+              <div className="footer-contact-item" style={{ cursor: 'default' }}>
+                <div className="icon-circle small"><i className="fas fa-map-marker-alt"></i></div>
+                <span>{isArabic ? 'الخرطوم، السودان' : 'Khartoum, Sudan'}</span>
+              </div>
+            </div>
           </div>
           <div className="footer-social">
-            <h3>{currentContent.contact.followUs}</h3>
-            <a href="https://www.facebook.com/share/1BU2MevDFT/?mibextid=wwXIfr">
-              <div className="small">
-                <i className="fab fa-facebook-f"></i>
-              </div>
-            </a>
+            <h3>{c.contact.followUs}</h3>
+            <div className="footer-social-list">
+              <a href="https://www.facebook.com/share/1BU2MevDFT/?mibextid=wwXIfr" target="_blank" rel="noreferrer">
+                <div className="icon-circle small"><i className="fab fa-facebook-f"></i></div>
+                <span>Facebook</span>
+              </a>
+            </div>
           </div>
         </div>
         <div className="container footer-copy">
-          <p>{currentContent.footer.copyright}</p>
+          <p>{c.footer.copyright}</p>
         </div>
       </footer>
-
-      
     </div>
   );
 }
-
-export default App;
