@@ -30,7 +30,7 @@ export const content = {
     ]},
     partners: { title: "شركاؤنا الكرام" },
     work: { title: "نظرة على أعمالنا", tabs: ["حكومية", "إنسانية", "شركات خاصة"] },
-    process: { title: "عمليتنا", steps: ["الفهم والبحث", "تطوير الاستراتيجية", "التصور الإبداعي", "التصميم وإنتاج المحتوى", "المراجعة والتوافق", "الإطلاق والتقييم"] },
+    process: { title: "عملياتنا", steps: ["الفهم والبحث", "تطوير الاستراتيجية", "التصور الإبداعي", "التصميم وإنتاج المحتوى", "المراجعة والتوافق", "الإطلاق والتقييم"] },
     vision: { title: "الرؤية", text: "المساهمة طويلة الأمد في العلامات التجارية للقطاعين العام والخاص" },
     mission: { title: "الرسالة", text: "تقديم حلول إبداعية تتماشى مع الأهداف الاستراتيجية" },
     values: { title: "القيم الأساسية", list: ["النزاهة - المساءلة", "الوعي الثقافي - المهنية"] },
@@ -64,4 +64,5 @@ export const partnerLogos = [
   { src: LOGO_BASE + "sadagaat.png", name: "Sadagaat" },
   { src: LOGO_BASE + "tawseel.png", name: "Tawseel" },
   { src: LOGO_BASE + "khalid_dagash.jpeg", name: "Khalid Dagash" },
+  { src: LOGO_BASE + "sapa.png", name: "SAPA" },
 ];

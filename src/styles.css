@@ -498,3 +498,42 @@
       .rtl .section-title, .rtl .section-copy { text-align: center; }
       .rtl .hero-eyebrow { letter-spacing: 0.08em; }
       .rtl .hero-title { letter-spacing: -0.02em; }
+
+      .scroll-top-btn {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  width: 52px;
+  height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #ffffff;
+  box-shadow: 0 16px 30px rgba(124, 58, 237, 0.2);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease,
+    background 0.25s ease;
+  z-index: 1200;
+  cursor: pointer;
+}
+
+.scroll-top-btn.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.scroll-top-btn:hover {
+  background: #8b5cf6;
+}
+
+.scroll-top-btn i {
+  font-size: 1rem;
+}

@@ -60,6 +60,7 @@ export default function App() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [activeTab, setActiveTab] = useState('governmental');
   const [activeSection, setActiveSection] = useState('about');
+  const [showScrollTop, setShowScrollTop] = useState(false);
   const navRef = useRef(null);
 
   const marqueeLogos = [...partnerLogos, ...partnerLogos];
@@ -97,6 +98,10 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    const handleScroll = () => setShowScrollTop(window.scrollY > 320);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+
     const sections = document.querySelectorAll('section[id], footer#footer');
     const sectionObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -104,7 +109,10 @@ export default function App() {
       });
     }, { threshold: 0.35 });
     sections.forEach(s => sectionObserver.observe(s));
-    return () => sectionObserver.disconnect();
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      sectionObserver.disconnect();
+    };
   }, []);
 
   const c = isArabic ? content.ar : content.en;
@@ -331,6 +339,13 @@ export default function App() {
           <p>{c.footer.copyright}</p>
         </div>
       </footer>
+      <button
+        type="button"
+        className={`scroll-top-btn ${showScrollTop ? 'visible' : ''}`}
+        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        aria-label={isArabic ? 'العودة إلى الأعلى' : 'Back to top'}>
+        <i className="fas fa-chevron-up"></i>
+      </button>
     </div>
   );
 }

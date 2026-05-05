@@ -42,6 +42,10 @@ const VIDS = {
     { src: "https://drive.google.com/file/d/1e2wRq18k-SZUHMxt9DxaNXxZIvPibSVV/preview", title: { ar: "بنك النيل 3", en: "Al Nile Bank 3" } },
     { src: "https://drive.google.com/file/d/1273dbC_N3Gw5qXBv-VYTVaQpUbZtwDvz/preview", title: { ar: "بنك النيل 4", en: "Al Nile Bank 4" } },
   ],
+  sapa:[
+    { src: "https://www.youtube.com/embed/6WfAELAJ86w", title: { ar: "مشروع عودة العافية | مستشفى بحري", en: "The Return to Wellness Project | Bahri Hospital" } },
+
+  ]
 };
 
 const pickVideos = (list, lang) => (list || []).map(v => ({ src: v.src, title: v.title[lang] }));
@@ -51,7 +55,7 @@ function buildProjects(lang) {
     return [
       { title: "وزارة التعليم الوطني - حملة مدرستي أولاً - 2026", desc: "قامت شارك كريتفز بتشغيل وتنفيذ حملة كاملة لوزارة التعليم، بدءاً من إطلاق منصات التواصل الاجتماعي للوزارة وإنتاج جميع المنتجات الرقمية والفيديوهات والصور الثابتة والأخبار.", category: "governmental", videos: [] },
       { title: "الشركة السودانية للموارد المعدنية - فيلم وثائقي 2024", desc: "فيلم وثائقي شامل يبرز مبادرات المسؤولية الاجتماعية عبر القطاعات الشرقية والشمالية والوسطى.", category: "governmental", videos: pickVideos(VIDS.smrc, 'ar') },
-      { title: "اليونسيف - مشروع التعلم الإلكتروني", desc: "تغطية إعلامية شاملة لزيارة المدير الإقليمي لمركز التعلم الإلكتروني في الإسكان، بورتسودان.", category: "humanitarian", videos: pickVideos(VIDS.unicef, 'ar') },
+      { title: "اليونسيف - مشروع التعليم الإلكتروني", desc: "تغطية إعلامية شاملة لزيارة المدير الإقليمي لمركز التعليم الإلكتروني في الإسكان، بورتسودان.", category: "humanitarian", videos: pickVideos(VIDS.unicef, 'ar') },
       { title: "مركز الملك سلمان للإغاثة - مشروع دعم الأمن الغذائي 2024", desc: "إنتاج فيديو إطلاق رسمي لمشروع دعم الأمن الغذائي في السودان.", category: "humanitarian", videos: [] },
       { title: "مصنع مودا للصلب - الهوية التجارية والحضور الرقمي", desc: "بناء حضور رقمي قوي ومتسق للعلامة التجارية من خلال حملة علامة تجارية استراتيجية.", category: "private", videos: pickVideos(VIDS.moda, 'ar') },
       { title: "صناعات سيف الدولة الغذائية - إدارة وسائل التواصل الاجتماعي", desc: "إدارة شاملة لمنصات وسائل التواصل الاجتماعي وتنفيذ حملات إعلانية مستهدفة.", category: "private", videos: [] },
@@ -62,6 +66,7 @@ function buildProjects(lang) {
       { title: "توصيل - حضور العلامة التجارية في اللوجستيات", desc: "تصميم علامة تجارية رقمية استراتيجية لتوصيل.", category: "private", videos: pickVideos(VIDS.tawseel, 'ar') },
       { title: "بنك النيل - حملة خدمات مالية", desc: "حملة متميزة لبنك النيل تركز على الخدمات المصرفية الرقمية.", category: "private", videos: pickVideos(VIDS.nileBank, 'ar') },
       { title: "شركة خالد دقاش الطبية - الهوية التجارية والحضور الرقمي", desc: "تطوير هوية تجارية شاملة وحضور رقمي للشركة الطبية.", category: "private", videos: [] },
+      { title: "رابطة الأطباء السودانيين الأمريكيين (سابا)", desc: "تغطية عودة مستشفى بحري التعليمي للعمل.", category: "humanitarian", videos: pickVideos(VIDS.sapa, 'ar') },
     ];
   }
   return [
@@ -78,6 +83,7 @@ function buildProjects(lang) {
     { title: "Tawseel – Logistics Brand Presence", desc: "Strategic brand and digital design for Tawseel.", category: "private", videos: pickVideos(VIDS.tawseel, 'en') },
     { title: "Al Nile Bank – Financial Services Campaign", desc: "A premium campaign for Al Nile Bank focusing on digital banking services.", category: "private", videos: pickVideos(VIDS.nileBank, 'en') },
     { title: "Khalid Daqash Medical Company - Brand Identity", desc: "Developing a comprehensive brand identity and digital presence.", category: "private", videos: [] },
+    { title: "Sudanese American Physicians Association (SAPA)", desc: "Coverage of the return of the Bahri Teaching Hospital to operation.", category: "humanitarian", videos: pickVideos(VIDS.sapa, 'en') },
   ];
 }
 
