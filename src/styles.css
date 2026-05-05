@@ -341,17 +341,21 @@
       }
       .video-example { cursor: pointer; }
       .video-example h3 {
-        margin: 12px 0 0; font-size: 0.98rem; color: #475569;
+        margin: 12px 0 0;
+         font-size: 0.98rem;
+          color: #475569;
         font-weight: 600; line-height: 1.5;
       }
       .video-wrapper {
-        width: 100%; aspect-ratio: 16/9;
+        width: 100%;
+         aspect-ratio: 16/9;
         border-radius: 16px; overflow: hidden;
         background: #0f172a; position: relative;
         box-shadow: 0 12px 30px rgba(0,0,0,0.12);
         transition: transform 0.3s, box-shadow 0.3s;
       }
       .video-example:hover .video-wrapper {
+        direction: ltr;
         transform: translateY(-4px);
         box-shadow: 0 20px 40px rgba(0,0,0,0.18);
       }
