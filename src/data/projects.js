@@ -1,13 +1,13 @@
 // Shared video lists (same URLs for AR and EN with bilingual titles)
 const VIDS = {
   smrc: [
-    { src: "https://drive.google.com/file/d/1aoDU9kkf2n7_B0aht_rxzJX5kPxiq6xe/preview", title: { ar: "فيلم المسؤولية المجتمعية", en: "CSR Documentary" } },
+    { src: "https://drive.google.com/file/d/1aoDU9kkf2n7_B0aht_rxzJX5kPxiq6xe/preview", title: { ar: "فيلم المسؤولية المجتمعية", en: "CSR Documentary" } ,ratio:"16/9"},
   ],
   unicef: [
-    { src: "https://drive.google.com/file/d/1ZXedinBb2pItP7p57198wheuF8iwRT5n/preview", title: { ar: "مشروع التعليم الالكتروني", en: "E-Learning Project" } },
+    { src: "https://drive.google.com/file/d/1ZXedinBb2pItP7p57198wheuF8iwRT5n/preview", title: { ar: "مشروع التعليم الالكتروني", en: "E-Learning Project" },ratio:"16/9" },
   ],
   moda: [
-    { src: "https://drive.google.com/file/d/1ylNJ85jJNdjBZ9Uo_uOmkicAU1JW_1md/preview", title: { ar: "اغنية مودا معانا", en: "Moda Anthem" } },
+    { src: "https://drive.google.com/file/d/1ylNJ85jJNdjBZ9Uo_uOmkicAU1JW_1md/preview", title: { ar: "اغنية مودا معانا", en: "Moda Anthem" }  },
     { src: "https://drive.google.com/file/d/1BOj8OX5UQcd1479io9LVGXPl_XO-01PD/preview", title: { ar: "مودا - اعلان", en: "Moda - Ad" } },
     { src: "https://drive.google.com/file/d/1vWjMdjr0lNPSdxUrig1huw5eA08RCQxD/preview", title: { ar: "حملة تحدي الثبات 1", en: "Resilience Challenge 1" } },
     { src: "https://drive.google.com/file/d/105NxVUQgEyvumyC5a6911TvBbMDqNgc1/preview", title: { ar: "حملة تحدي الثبات 2", en: "Resilience Challenge 2" } },
@@ -19,10 +19,10 @@ const VIDS = {
     { src: "https://drive.google.com/file/d/1cCgzQkTpniUhOxc_0615ETT065NNp9nH/preview", title: { ar: "حملة تحدي الثبات 8", en: "Resilience Challenge 8" } },
   ],
   oneSudan: [
-    { src: "https://drive.google.com/file/d/1tHO6W1g38GN-vaVGFfRliJ8iE2Mpjda6/preview", title: { ar: "وان سودان", en: "One Sudan" } },
+    { src: "https://drive.google.com/file/d/1tHO6W1g38GN-vaVGFfRliJ8iE2Mpjda6/preview", title: { ar: "وان سودان", en: "One Sudan" } ,ratio:"16/9"},
   ],
   sadagaat: [
-    { src: "https://drive.google.com/file/d/1BZ0fWC1jmuJfiU3m0kI2K4FtpUXagU0I/preview", title: { ar: "صدقات - يلا نتعلم", en: "Sadagaat - Yalla Net'allam" } },
+    { src: "https://drive.google.com/file/d/1BZ0fWC1jmuJfiU3m0kI2K4FtpUXagU0I/preview", title: { ar: "صدقات - يلا نتعلم", en: "Sadagaat - Yalla Net'allam" },ratio:"16/9" },
   ],
   fadcnc: [
     { src: "https://drive.google.com/file/d/1jnXcAkNek5FYQFLiJr8t3-cipBP94C-F/preview", title: { ar: "FAD CNC 1", en: "FAD CNC 1" } },
@@ -43,12 +43,12 @@ const VIDS = {
     { src: "https://drive.google.com/file/d/1273dbC_N3Gw5qXBv-VYTVaQpUbZtwDvz/preview", title: { ar: "بنك النيل 4", en: "Al Nile Bank 4" } },
   ],
   sapa:[
-    { src: "https://www.youtube.com/embed/6WfAELAJ86w", title: { ar: "مشروع عودة العافية | مستشفى بحري", en: "The Return to Wellness Project | Bahri Hospital" } },
+    { src: "https://www.youtube.com/embed/6WfAELAJ86w", title: { ar: "مشروع عودة العافية | مستشفى بحري", en: "The Return to Wellness Project | Bahri Hospital" } ,ratio:"16/9"},
 
   ]
 };
 
-const pickVideos = (list, lang) => (list || []).map(v => ({ src: v.src, title: v.title[lang] }));
+const pickVideos = (list, lang) => (list || []).map(v => ({ src: v.src, title: v.title[lang] ,ratio:v.ratio}));
 
 function buildProjects(lang) {
   if (lang === 'ar') {
