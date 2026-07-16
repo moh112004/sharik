@@ -13,6 +13,7 @@ function VideoViewer({ src, title, ratio }) {
         <iframe
           src={src}
           title={title}
+          loading="lazy"
           frameBorder="0"
           allow="autoplay; encrypted-media"
           allowFullScreen></iframe>
