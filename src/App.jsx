@@ -6,13 +6,31 @@ import {
   partnerLogos,
 } from "./data/content.js";
 import { projectsByLang } from "./data/projects.js";
+const getThumbnailUrl = (url) => {
+  if (!url) return "";
+
+  // التحقق واستخراج المعرف إذا كان الرابط من يوتيوب
+  const ytMatch = url.match(/(?:youtube\.com\/(?:[^/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?/ ]{11})/);
+  if (ytMatch) {
+    return `https://img.youtube.com/vi/${ytMatch[1]}/mqdefault.jpg`; // جودة متوسطة سريعة التحميل
+  }
+
+  // التحقق واستخراج المعرف إذا كان الرابط من جوجل درايف
+  const driveMatch = url.match(/\/file\/d\/([^/]+)/) || url.match(/id=([^&]+)/);
+  if (driveMatch) {
+    return `https://drive.google.com/thumbnail?id=${driveMatch[1]}&sz=w800`; // خادم مستقر لتفادي حظر الطلبات الكثيرة
+  }
+
+  return "";
+};
+
 function VideoViewer({ src, title, ratio }) {
   const [isLoaded, setIsLoaded] = useState(false);
 
   // استخراج معرّف الفيديو من رابط جوجل درايف باستخدام تعبير نمطي
   const videoIdMatch = src.match(/\/file\/d\/([^/]+)/) || src.match(/id=([^&]+)/);
   const videoId = videoIdMatch ? videoIdMatch[1] : null;
-  const thumbnailUrl = videoId ? `https://drive.google.com/thumbnail?id=${videoId}&sz=w800` : "";
+  const thumbnailUrl = getThumbnailUrl(src);
 
   return (
     <div className="video-example">

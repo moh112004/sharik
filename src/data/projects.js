@@ -43,7 +43,7 @@ const VIDS = {
     { src: "https://drive.google.com/file/d/1273dbC_N3Gw5qXBv-VYTVaQpUbZtwDvz/preview", title: { ar: "بنك النيل 4", en: "Al Nile Bank 4" } },
   ],
   sapa:[
-    { src: "https://www.youtube.com/embed/6WfAELAJ86w", title: { ar: "مشروع عودة العافية | مستشفى بحري", en: "The Return to Wellness Project | Bahri Hospital" } ,ratio:"16/9"},
+    { src: "https://youtube.com/embed/6WfAELAJ86w", title: { ar: "مشروع عودة العافية | مستشفى بحري", en: "The Return to Wellness Project | Bahri Hospital" } ,ratio:"16/9"},
 
   ]
 };
