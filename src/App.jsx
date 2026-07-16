@@ -16,7 +16,7 @@ function VideoViewer({ src, title, ratio }) {
 
   return (
     <div className="video-example">
-      <a href={thumbnailUrl}>{thumbnailUrl}</a>
+      {/* <a href={thumbnailUrl}>{thumbnailUrl}</a> */}
       <div 
         className={`video-wrapper ${!isLoaded ? "not-loaded" : ""}`} 
         style={{ 
