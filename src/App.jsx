@@ -7,22 +7,63 @@ import {
 } from "./data/content.js";
 import { projectsByLang } from "./data/projects.js";
 function VideoViewer({ src, title, ratio }) {
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // استخراج معرّف الفيديو من رابط جوجل درايف باستخدام تعبير نمطي
+  const videoIdMatch = src.match(/\/file\/d\/([^/]+)/) || src.match(/id=([^&]+)/);
+  const videoId = videoIdMatch ? videoIdMatch[1] : null;
+  const thumbnailUrl = videoId ? `https://drive.google.com/thumbnail?id=${videoId}&sz=w800` : "";
+
   return (
     <div className="video-example">
-      <div className="video-wrapper" style={{ aspectRatio: ratio }}>
-        <iframe
-          src={src}
-          title={title}
-          loading="lazy"
-          frameBorder="0"
-          allow="autoplay; encrypted-media"
-          allowFullScreen></iframe>
+      <a href={thumbnailUrl}>{thumbnailUrl}</a>
+      <div 
+        className={`video-wrapper ${!isLoaded ? "not-loaded" : ""}`} 
+        style={{ 
+          aspectRatio: ratio,
+          backgroundImage: !isLoaded && thumbnailUrl ? `url(${thumbnailUrl})` : "none",
+          backgroundColor: "#000",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          position: "relative",
+          cursor: !isLoaded ? "pointer" : "default"
+        }}
+        onClick={() => { if (!isLoaded) setIsLoaded(true); }}
+      >
+        {isLoaded ? (
+          <iframe
+            src={`${src}${src.includes('?') ? '&' : '?'}autoplay=1`}
+            title={title}
+            loading="lazy"
+            frameBorder="0"
+            allow="autoplay; encrypted-media"
+            allowFullScreen
+            style={{ width: "100%", height: "100%", absolute: "absolute" }}>
+          </iframe>
+        ) : (
+          <div className="play-button-overlay" style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "60px",
+            height: "60px",
+            backgroundColor: "rgba(0, 0, 0, 0.7)",
+            borderRadius: "50%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "#fff",
+            fontSize: "24px"
+          }}>
+            ▶
+          </div>
+        )}
       </div>
       <h3>{title}</h3>
     </div>
   );
 }
-
 function ProjectCard({ project, isArabic }) {
   const [expanded, setExpanded] = useState(false);
   const VIDEO_LIMIT = 5;
